@@ -14,8 +14,13 @@ def pay_once_aweek(transactions_list):
     today = date.today()
     for transaction in transactions_list:
         if transaction.schedule == today:
+            # TODO: check how to run the post requests
             # perform_transaction(transaction)
-            done.append(transaction)
+            # res = download_report()
+            # if res[transaction.id] == "fail":
+            #     transaction.schedule = transactions_list[-2].schedule
+            # else:
+                done.append(transaction)
     for t in done:
         transactions_list.pop(transactions_list.index(t))
     sleep(5)
