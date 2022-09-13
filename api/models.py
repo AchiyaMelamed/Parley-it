@@ -1,16 +1,16 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+
 import uuid
-
-from datetime import date
-
+import datetime
 
 # Create your models here.
-class BankAccount(models.Model):
-    uuid  = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    account_number = models.CharField(max_length=100)
+class BankAccount(AbstractUser):
+    id  = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    account_number = models.CharField(max_length=10, unique=True)
 
     def __str__(self):
-        return str(self.account_number)
+        return f"{self.username}: {self.account_number}"
 
 class Transaction(models.Model):
     id = models.AutoField(primary_key=True)
@@ -19,45 +19,36 @@ class Transaction(models.Model):
     amount = models.FloatField()
     direction = models.CharField(max_length=10, choices=(("credit", "credit"), ("debit", "debit")), default="debit")
     result = models.CharField(max_length=10, choices=(("success", "success"), ("fail", "fail")), null=True, blank=True)
-    date = models.DateField(default=date.today)
+    date = models.DateField(default=datetime.date.today)
 
     def __str__(self):
-        return f"{self.id}"
+        return f"{self.id}. {self.result}: {self.src_bank_account.username} -> {self.dst_bank_account.username} ({self.direction}, {self.amount})"
 
 class ScheduledTransaction(models.Model):
     id = models.AutoField(primary_key=True)
     src_bank_account = models.ForeignKey(BankAccount, related_name="scheduled_sources", on_delete=models.CASCADE)
     dst_bank_account = models.ForeignKey(BankAccount, related_name="scheduled_detinations", on_delete=models.CASCADE)
-    started_at = models.DateField(default=date.today)
+    started_at = models.DateField(default=datetime.date.today)
+    credit_transaction = models.ForeignKey(Transaction, on_delete=models.SET_NULL, null=True, blank=True)
     amount = models.FloatField()
     direction = models.CharField(max_length=10, choices=(("credit", "credit"), ("debit", "debit")), default="debit")
     success = models.IntegerField(default=0)
-    fail = models.IntegerField(default=0)
+    fail_once = models.IntegerField(default=0)
     fail_completely = models.IntegerField(default=0)
     
     def __str__(self):
-        return f"{self.id}"
+        return f"{self.id}. {(self.success+self.fail_completely)/12*100}%: {self.src_bank_account.username} -> {self.dst_bank_account.username} ({self.direction}, {self.amount})"
 
 class SuccessScheduledTransaction(models.Model):
     id = models.AutoField(primary_key=True)
-    src_bank_account = models.ForeignKey(BankAccount, related_name="success_sources", on_delete=models.CASCADE)
-    dst_bank_account = models.ForeignKey(BankAccount, related_name="success_detinations", on_delete=models.CASCADE)
     transaction_id = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    amount = models.FloatField()
-    direction = models.CharField(max_length=10, choices=(("credit", "credit"), ("debit", "debit")), default="debit")
-    date = models.DateField(default=date.today)
     
     def __str__(self):
-        return f"{self.id}"
+        return f"{self.id}: {self.transaction_id}"
 
 class FailScheduledTransaction(models.Model):
     id = models.AutoField(primary_key=True)
-    src_bank_account = models.ForeignKey(BankAccount, related_name="fail_sources", on_delete=models.CASCADE)
-    dst_bank_account = models.ForeignKey(BankAccount, related_name="fail_detinations", on_delete=models.CASCADE)
     transaction_id = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    amount = models.FloatField()
-    direction = models.CharField(max_length=10, choices=(("credit", "credit"), ("debit", "debit")), default="debit")
-    date = models.DateField(default=date.today)
-    
+
     def __str__(self):
-        return f"{self.id}"
+        return f"{self.id}: {self.transaction_id}"
