@@ -7,9 +7,16 @@ import datetime
 # Create your models here.
 class BankAccount(AbstractUser):
     id  = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    account_number = models.CharField(max_length=10, unique=True)
+    account_number = models.CharField(max_length=10, null=False, blank=False, default=None)
+    
+    def save(self, *args, **kwargs):
+        if not self.account_number:
+            next_number = BankAccount.objects.all().count() + 1
+            self.account_number = str(next_number) + "0" * (10 - len(str(next_number)))
+        super(BankAccount, self).save()                                         
 
     def __str__(self):
+        model = BankAccount
         return f"{self.username}: {self.account_number}"
 
 class Transaction(models.Model):

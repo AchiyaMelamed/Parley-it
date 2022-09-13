@@ -40,8 +40,8 @@ def perform_transaction_and_check_result(src_bank_account_obj, dst_bank_account_
 def get_twelve_dates():
     """calculate the next 12 sundays dates.
 
-    Returns:
-        scheduled_dates (List): list of datetime.date with 12 dates.
+        Returns:
+            scheduled_dates (List): list of datetime.date with 12 dates.
     """
     today = datetime.date.today()
     next_sunday = today + datetime.timedelta( (6 - today.weekday() % 7) )

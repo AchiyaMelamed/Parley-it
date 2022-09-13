@@ -18,7 +18,6 @@ class PerformTransactionEveryWeek(threading.Thread):
         self.direction = self.scheduled_transaction.direction
         
         self.scheduled_dates = scheduled_dates
-        # self.week_before_the_last = self.scheduled_dates[-2]
         self.scheduled_dates_left = scheduled_dates
         self.amount_week_before_last = 0
     
