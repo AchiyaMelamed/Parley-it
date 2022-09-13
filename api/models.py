@@ -35,9 +35,10 @@ class ScheduledTransaction(models.Model):
     success = models.IntegerField(default=0)
     fail_once = models.IntegerField(default=0)
     fail_completely = models.IntegerField(default=0)
+    dates_done = models.IntegerField(default=0)
     
     def __str__(self):
-        return f"{self.id}. {(self.success+self.fail_completely)/12*100}%: {self.src_bank_account.username} -> {self.dst_bank_account.username} ({self.direction}, {self.amount})"
+        return f"{self.id}. {(self.dates_done)/12*100}%: {self.src_bank_account.username} -> {self.dst_bank_account.username} ({self.direction}, {self.amount})"
 
 class SuccessScheduledTransaction(models.Model):
     id = models.AutoField(primary_key=True)

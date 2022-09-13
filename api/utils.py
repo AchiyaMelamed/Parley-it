@@ -36,7 +36,19 @@ def perform_transaction_and_check_result(src_bank_account_obj, dst_bank_account_
     
     return transaction_id, "success" in result
     
-    
+
+def get_twelve_dates():
+    """calculate the next 12 sundays dates.
+
+    Returns:
+        scheduled_dates (List): list of datetime.date with 12 dates.
+    """
+    today = datetime.date.today()
+    next_sunday = today + datetime.timedelta( (6 - today.weekday() % 7) )
+    scheduled_dates = [next_sunday + datetime.timedelta(weeks=i) for i in range(12)]
+    return scheduled_dates
+
+
 def create_scheduled_transaction_object_and_dates(src_bank_account_obj, dst_bank_account_obj, credit_transaction_id, amount, direction):
     """create ScheduledTransaction, and the dates it will perform.
 
@@ -56,8 +68,6 @@ def create_scheduled_transaction_object_and_dates(src_bank_account_obj, dst_bank
     new_scheduled_transaction_obj = ScheduledTransaction.objects.create(src_bank_account=src_bank_account_obj, dst_bank_account=dst_bank_account_obj, credit_transaction=credit_transaction_obj, amount=one_pay, direction=direction)
     
     # calculate the dates to make transaction in each
-    today = datetime.date.today()
-    next_sunday = today + datetime.timedelta( (6 - today.weekday() % 7) )
-    scheduled_dates = [next_sunday + datetime.timedelta(weeks=i) for i in range(12)]
+    scheduled_dates = get_twelve_dates()
 
     return new_scheduled_transaction_obj, scheduled_dates

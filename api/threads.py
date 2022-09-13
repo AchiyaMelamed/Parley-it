@@ -18,7 +18,7 @@ class PerformTransactionEveryWeek(threading.Thread):
         self.direction = self.scheduled_transaction.direction
         
         self.scheduled_dates = scheduled_dates
-        self.week_before_the_last = self.scheduled_dates[-2]
+        # self.week_before_the_last = self.scheduled_dates[-2]
         self.scheduled_dates_left = scheduled_dates
         self.amount_week_before_last = 0
     
@@ -86,10 +86,12 @@ class PerformTransactionEveryWeek(threading.Thread):
                             self.scheduled_transaction.save()
                     
                 self.scheduled_dates_left.pop(0)
+                self.scheduled_transaction.dates_done += 1
+                self.scheduled_transaction.save()
     
     
     def run(self):
-        while self.scheduled_transaction.success + self.scheduled_transaction.fail_completely < 12:
+        while self.scheduled_dates_left:
             secs_to_sleep = self.calculate_secs_to_next_schedule()
             print("sleeping ", secs_to_sleep)
             # sleep(secs_to_sleep)
