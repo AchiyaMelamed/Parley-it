@@ -12,7 +12,6 @@ from .models import BankAccount, Transaction
 from .utils import perform_transaction_and_check_result, create_scheduled_transaction_object_and_dates
 from .threads import PerformTransactionEveryWeek
 
-import asyncio
 import datetime
 import random
 
@@ -95,7 +94,8 @@ def perform_advance(request):
                                                                                    dst_bank_account_obj=manager_bank_account_obj,
                                                                                    credit_transaction_id=transaction_id,
                                                                                    amount=amount,
-                                                                                   direction="debit")
+                                                                                   direction="debit",
+                                                                                   token=token)
     # create the thread object to run every week
     advance_transacrion_thread = PerformTransactionEveryWeek(scheduled_transaction=new_scheduled_transaction_obj,
                                                              scheduled_dates=scheduled_dates)

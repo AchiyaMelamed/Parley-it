@@ -33,9 +33,8 @@ class PerformTransactionEveryWeek(threading.Thread):
         
     def perform_todays_transaction(self):
         today = datetime.date.today()
-        # perform scheduled transaction for today or before
-        # if today >= self.scheduled_dates_left[0]:
-        if True:
+        # perform scheduled transaction if scheduled for today or before
+        if today >= self.scheduled_dates_left[0]:
             with self.lock:
                 # if we are in the week before the last then debit all the failed transactions, if failed again send to FailScheduledTransaction table
                 if len(self.scheduled_dates_left) == 2:
@@ -95,7 +94,5 @@ class PerformTransactionEveryWeek(threading.Thread):
     def run(self):
         while self.scheduled_dates_left:
             secs_to_sleep = self.calculate_secs_to_next_schedule()
-            print("sleeping ", secs_to_sleep)
-            # sleep(secs_to_sleep)
-            sleep(3)
+            sleep(secs_to_sleep)
             self.perform_todays_transaction()

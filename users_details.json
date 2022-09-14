@@ -1,0 +1,17 @@
+{
+    "users":
+    [
+        {
+            "username": "admin",
+            "account_number": "0000000000",
+            "password": "123456",
+            "token": "9e1ac1067a82a9ca9abc21f29bf2b78acf333401"
+        },
+        {
+            "username": "user1",
+            "account_number": "1000000000",
+            "password": "qawsed12345",
+            "token": "1853cefa6e6149ba2984ea16246ebf6f2a85e26d"
+        }
+    ]
+}

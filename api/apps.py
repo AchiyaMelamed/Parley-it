@@ -28,6 +28,7 @@ class ApiConfig(AppConfig):
                     scheduled_dates = scheduled_dates[:1]
                 else:
                     scheduled_dates = scheduled_dates[:12 - undone_scheduled_transaction.dates_done]
+                    
                 advance_transacrion_thread = PerformTransactionEveryWeek(scheduled_transaction=undone_scheduled_transaction,
                                                              scheduled_dates=scheduled_dates)
                 advance_transacrion_thread.start()
