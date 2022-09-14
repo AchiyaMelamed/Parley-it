@@ -16,6 +16,7 @@ class PerformTransactionEveryWeek(threading.Thread):
         self.dst_bank_account = self.scheduled_transaction.dst_bank_account
         self.amount = self.scheduled_transaction.amount
         self.direction = self.scheduled_transaction.direction
+        self.token = self.scheduled_transaction.token
         
         self.scheduled_dates = scheduled_dates
         self.scheduled_dates_left = scheduled_dates
@@ -43,7 +44,8 @@ class PerformTransactionEveryWeek(threading.Thread):
                                                                                 src_bank_account_obj=self.src_bank_account,
                                                                                 dst_bank_account_obj=self.dst_bank_account,
                                                                                 amount=self.amount_week_before_last,
-                                                                                direction=self.direction
+                                                                                direction=self.direction,
+                                                                                token = self.token
                                                                                 )
                     transaction_obj = Transaction.objects.get(id=transaction_id)
                         
@@ -64,7 +66,8 @@ class PerformTransactionEveryWeek(threading.Thread):
                                                                                 src_bank_account_obj=self.src_bank_account,
                                                                                 dst_bank_account_obj=self.dst_bank_account,
                                                                                 amount=self.amount,
-                                                                                direction=self.direction
+                                                                                direction=self.direction,
+                                                                                token=self.token
                                                                                 )
                     transaction_obj = Transaction.objects.get(id=transaction_id)
                     

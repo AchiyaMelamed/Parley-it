@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'rest_framework',
-    'knox',
+    'rest_framework.authtoken',
     'api',
 ]
 
@@ -129,13 +129,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 BASE_URL = "http://127.0.0.1:8000/"
 
-AUTH_USER_MODEL = 'api.BankAccount'
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        'knox.auth.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication'
     ]
 }
+
 

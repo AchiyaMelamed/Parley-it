@@ -1,10 +1,11 @@
 from Parleyit.settings import BASE_URL
 from .models import Transaction, ScheduledTransaction
+from rest_framework.authtoken.models import Token
 
 import requests
 import datetime
 
-def perform_transaction_and_check_result(src_bank_account_obj, dst_bank_account_obj, amount, direction):
+def perform_transaction_and_check_result(src_bank_account_obj, dst_bank_account_obj, amount, direction, token):
     """make a transaction, get the transaction id, then get the report and check if the transaction success/fail
     
 
@@ -24,7 +25,8 @@ def perform_transaction_and_check_result(src_bank_account_obj, dst_bank_account_
                         "dst_bank_account": dst_bank_account_obj.account_number,
                         "amount": amount,
                         "direction": direction}
-    response = requests.post(BASE_URL+"perform_transaction/", json=perform_transaction_json)
+    headers = {"Authorization": token}
+    response = requests.post(BASE_URL+"perform_transaction/", json=perform_transaction_json, headers=headers)
     response_json = response.json()
     transaction_id = response_json["transaction_id"]
     
@@ -49,7 +51,7 @@ def get_twelve_dates():
     return scheduled_dates
 
 
-def create_scheduled_transaction_object_and_dates(src_bank_account_obj, dst_bank_account_obj, credit_transaction_id, amount, direction):
+def create_scheduled_transaction_object_and_dates(src_bank_account_obj, dst_bank_account_obj, credit_transaction_id, amount, direction, token):
     """create ScheduledTransaction, and the dates it will perform.
 
         Args:
@@ -65,7 +67,12 @@ def create_scheduled_transaction_object_and_dates(src_bank_account_obj, dst_bank
     # create schedule transaction
     credit_transaction_obj = Transaction.objects.get(id=credit_transaction_id)
     one_pay = amount / 12
-    new_scheduled_transaction_obj = ScheduledTransaction.objects.create(src_bank_account=src_bank_account_obj, dst_bank_account=dst_bank_account_obj, credit_transaction=credit_transaction_obj, amount=one_pay, direction=direction)
+    new_scheduled_transaction_obj = ScheduledTransaction.objects.create(src_bank_account=src_bank_account_obj,
+                                                                        dst_bank_account=dst_bank_account_obj,
+                                                                        credit_transaction=credit_transaction_obj,
+                                                                        amount=one_pay,
+                                                                        direction=direction,
+                                                                        token=token)
     
     # calculate the dates to make transaction in each
     scheduled_dates = get_twelve_dates()

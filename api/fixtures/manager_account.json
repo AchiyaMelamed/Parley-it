@@ -1,8 +1,0 @@
-[
-    {
-        "model": "api.BankAccount",
-        "fields": {
-            "account_number": "0000000000"
-        }
-    }
-]
