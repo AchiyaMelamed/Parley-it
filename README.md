@@ -2,6 +2,13 @@
 ##### API to simply perform an advance and schedule it for 12 weeks.
 
 
+## Table of contents
+  * [Introduction](#introduction)
+  * [Technologies](#technologies)
+  * [API Calls](#api-calls)
+  * [Launch](#launch)
+  * [More Features](#more-features)
+
 ## Introduction
 This API uses two other API calls (perform_transaction, download_report) for credits a customer an then debit him in 12 pays.
 
@@ -18,10 +25,9 @@ This call makes a transaction and returns the transaction id.
 #### 2. GET: download_report():
 This call downloads a report of the transaction that done in the last 5 days.
 
-### These two calls doesn't exist in this project, We just make a FAKE version of them just for testing the perform_advance call.
-<br />
+#### These two calls doesn't exist in this project, We just make a FAKE version of them just for testing the perform_advance call.
 
-#### 3. POST: perform_advance(dst_bank_account, amount):
+### 3. POST: perform_advance(dst_bank_account, amount):
 This call credits the customer (dst_bank_account) with the amount, and then debits him for 12 weeks with amount/12 once a week,<br /> 
 While a fail debit moves to be done in a week from the last payment. <br />
 If the payment of the week from the last failed the details of this payment will be saved in the DB as failed transaction so it can be done again later.<br />
