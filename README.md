@@ -57,7 +57,7 @@ Furthermore, all the data about the transactions save in the DB, including the p
     "password": "123456"
 }`
   
-  ### For testing the API there are admin and one more user ("user1") already registered to the server, <br /> The file "user_details.json" includes all their details for runnung the API.
+  #### For testing the API there are admin and one more user ("user1") already registered to the server, <br /> The file "user_details.json" includes all their details for runnung the API.
   
 #### 4. Make the call
   Make a POST request <br />
