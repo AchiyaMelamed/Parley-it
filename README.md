@@ -29,9 +29,9 @@ This call downloads a report of the transaction that done in the last 5 days.
 
 ### 3. POST: perform_advance(dst_bank_account, amount):
 This call credits the customer (dst_bank_account) with the amount, and then debits him for 12 weeks with amount/12 once a week,<br /> 
-While a fail debit moves to be done in a week from the last payment. <br />
-If the payment of the week from the last failed the details of this payment will be saved in the DB as failed transaction so it can be done again later.<br />
-Furthermore, all the data about the transactions save in the DB, including the payments that failed and movedt to the end of the repayment plan.
+A fail debit moves to be done in a week from the last payment. <br />
+If the payment of the week from the last also failed the details of this payment will be saved in the DB as failed transaction so it can be done again later.<br />
+Furthermore, all the data about the transactions saves in the DB, including the payments that failed and moved to the end of the repayment plan.
 
 
 ## Launch
@@ -46,7 +46,7 @@ Furthermore, all the data about the transactions save in the DB, including the p
  
 #### 3. Register/Login with existing user or admin
   Open Postman or any other API Platform and make a POST request.<br /><br />
- for register: <br />
+ ##### For register: <br />
  `http://127.0.0.1:8000/register/` <br />
  Add to the body a json with "username", "password" and "password2". <br />
  `{
@@ -55,7 +55,7 @@ Furthermore, all the data about the transactions save in the DB, including the p
     "password2": "qawsed12345"
 }`
  <br /><br /> or <br /><br />
- for login: <br />
+ ##### For login: <br />
  `http://127.0.0.1:8000/api-token-auth/` <br />
   Add to the body a json with "username" and "password". <br />
   `{
@@ -89,7 +89,7 @@ Furthermore, all the data about the transactions save in the DB, including the p
  
 ## More Features
 #### 1. Rerun undone scheduled transactions
-  Transactions that had scheduled to 12 weeks further but didn't done because the server stopped will rerun from the point they stopped when the server will start runnung again.
+  Transactions that had scheduled to 12 weeks further but didn't done because the server stopped will rerun from the point they have stopped when the server will start runnung again.
 
 #### 2. Permissions:
   Only admin user or the user itself can use the perform_advance call.
