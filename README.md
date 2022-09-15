@@ -64,7 +64,7 @@ Furthermore, all the data about the transactions saves in the DB, including the 
 }`
   
   #### For testing the API there are admin and one more user ("user1") already registered to the server, <br /> 
-  The file [users_details.json](users_details.json) includes all their details for runnung the API.
+  #### The file [users_details.json](users_details.json) includes all their details for runnung the API.
   
 #### 4. Make the call
   Make a POST request <br />
