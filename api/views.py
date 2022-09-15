@@ -1,3 +1,4 @@
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, authentication_classes  
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
@@ -59,25 +60,25 @@ def perform_advance(request):
         amount = request.data["amount"]
         token = request.headers["Authorization"]
     except KeyError as ex:
-        return Response({"400": "Please post dst_bank_account and an amount"})
+        return Response({"ERROR": "Please post dst_bank_account and an amount"}, status=status.HTTP_404_NOT_FOUND)
     
     
     # check if there is such BankAccount and get it
     try:
         customer_bank_account_obj = BankAccount.objects.get(account_number=dst_bank_account)
     except ObjectDoesNotExist as ex:
-        return Response({"400": "Bank Account dosn't exists."})
+        return Response({"ERROR": "Bank Account dosn't exists."}, status=status.HTTP_400_BAD_REQUEST)
 
     # just admin or the customer itself can do this request
     if customer_bank_account_obj.user.id != request.user.id and not request.user.is_superuser:
-        return Response({"401": "You are not allowed to do this request."})
+        return Response({"ERROR": "You are not allowed to do this request."}, status=status.HTTP_401_UNAUTHORIZED)
     
     
     # get the super user to perform advance
     try:
         manager_bank_account_obj = BankAccount.objects.get(user__is_superuser=True)
     except ObjectDoesNotExist as ex:
-        return Response({"500": "Manager Account dosn't exists."})
+        return Response({"ERROR": "Manager Account dosn't exists."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     # perfom the credit transaction and check if succeed
     transaction_id, success = perform_transaction_and_check_result(src_bank_account_obj=manager_bank_account_obj,
@@ -86,7 +87,7 @@ def perform_advance(request):
                                                                    direction="credit",
                                                                    token=token)
     if not success:
-        return Response({"500": f"There was a problem while performing the transaction ({transaction_id}), please try again."})
+        return Response({"ERROR": f"There was a problem while performing the transaction ({transaction_id}), please try again."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
        
     # get the scheduled transaction and its scheduled dates
